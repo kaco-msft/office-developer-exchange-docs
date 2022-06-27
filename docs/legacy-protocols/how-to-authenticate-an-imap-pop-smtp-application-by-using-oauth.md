@@ -178,21 +178,23 @@ S: 535 5.7.3 Authentication unsuccessful [SN2PR00CA0018.namprd00.prod.outlook.co
 
 Exchange service principals are used to enable applications to access Exchange mailboxes with client credentials flow with the POP and IMAP protocols.
 
-### Add the POP and IMAP permissions to your AAD app.
+### Add the POP and IMAP permissions to your AAD application
 
-1. Select the **API Permissions** blade in your AAD application in the Azure Portal
+1. Select the **API Permissions** blade in your AAD application's management view in the Azure Portal.
 2. Click **Add permission**.
-3. Click the **APIs my organization uses** tab and search for the *Office 365 Exchange Online* app.
+3. Click the **APIs my organization uses** tab and search for "*Office 365 Exchange Online*".
 4. Click **Application permissions**.
-5. If you want POP access, select the **POP.AccessAsApp** permission, and for IMAP access, select the **IMAP.AccessAsApp** permission.
+5. For POP access, select the **POP.AccessAsApp** permission. For IMAP access, select the **IMAP.AccessAsApp** permission.
 
 ![pop-imap-permission](media/pop-imap-api-permissions.png)
 
 6. Once selected, click **Add permissions**.
 
-### Tenant admin consent
+You should now have the POP or IMAP application permissions added to your AAD application's permissions.
 
-For each tenant you would like to access Exchange mailboxes via POP or IMAP, your AAD application must get tenant admin consent. Learn more about [tenant admin consent process](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent)
+### Get tenant admin consent
+
+For each tenant you would like to access Exchange mailboxes via POP or IMAP, your AAD application must get tenant admin consent. Learn more about [tenant admin consent process](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent) here.
 
 In your OAuth 2.0 tenant authorization request, the `scope` query parameter should be `https://ps.outlook.com/.default` for both the POP and IMAP application scopes.
 
@@ -202,9 +204,9 @@ Your OAuth 2.0 authorization request URL should look something like this:
 https://login.microsoftonline.com/{tenant}/v2.0/adminconsent?client_id=CLIENT_ID_HERE&redirect_uri=REDIRECT_URI_HERE&scope=https://ps.outlook.com/.default
 ```
 
-### Registering Exchange service principals
+### Registering service principals in Exchange
 
-Once your AAD application with the POP or IMAP application is consented by a tenant admin, the tenant admin must register your AAD application's service principal in Exchange via Exchange Online PowerShell. This is enabled by the `New-ServicePrincipal` cmdlet. (TODO: Link to public cmdlet reference)
+Once your AAD application is consented by a tenant admin, the tenant admin must register your AAD application's service principal in Exchange via Exchange Online PowerShell. This is enabled by the `New-ServicePrincipal` cmdlet. (TODO: Link to New-ServicePrincipal cmdlet reference when released)
 
 Here is an example of registering an AAD application's service principal in Exchange:
 
@@ -221,7 +223,7 @@ Add-MailboxPermission -Identity "john.smith@contoso.com" -User
 "<SERVICE_PRINCIPAL_ID>" -AccessRights FullAccess
 ```
 
-Your AAD application can now access the mailboxes with POP or IMAP with client credentials flow. [Instructions on on how to generate OAuth client credentials tokens can be found here](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-client-creds-grant-flow).
+Your AAD application can now access the allowed mailboxes via the POP or IMAP protocols using OAuth client credentials tokens. [Instructions on on how to generate OAuth client credentials tokens can be found here](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-client-creds-grant-flow).
 
 You must use `https://outlook.office365.com/.default` in the `scope` property in the body payload for the access token request.
 
