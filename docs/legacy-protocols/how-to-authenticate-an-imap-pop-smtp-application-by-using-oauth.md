@@ -33,9 +33,8 @@ You can use one of our [MSAL client libraries](/azure/active-directory/develop/m
 Alternatively, you can select an appropriate flow from the following list and follow the corresponding steps to call the underlying identity platform REST APIs and retrieve an access token.
 
 1. [OAuth2 authorization code flow](/azure/active-directory/develop/v2-oauth2-auth-code-flow)
-1. [OAuth2 Device authorization grant flow](/azure/active-directory/develop/v2-oauth2-device-code)
-
-OAuth access to IMAP, POP, SMTP AUTH protocols via OAuth2 client credentials grant flow is not supported. If your application needs persistent access to all mailboxes in a Microsoft 365 organization, we recommend that you use the Microsoft Graph APIs which allow access without a user, enable granular permissions and let administrators scope such access to a specific set of mailboxes.
+2. [OAuth2 device authorization grant flow](/azure/active-directory/develop/v2-oauth2-device-code)
+3. [OAuth2 client credentials grant flow](#using-client-credentials-grant-flow-to-authenticate-imap-and-pop-connections)
 
 Make sure to specify the full scopes, including Outlook resource URLs, when authorizing your application and requesting an access token.
 
@@ -176,7 +175,7 @@ S: 535 5.7.3 Authentication unsuccessful [SN2PR00CA0018.namprd00.prod.outlook.co
 
 ## Using client credentials grant flow to authenticate IMAP and POP connections
 
-Exchange service principals are used to enable applications to access Exchange mailboxes with client credentials flow with the POP and IMAP protocols.
+Service principals in Exchange are used to enable applications to access Exchange mailboxes via client credentials flow with the POP and IMAP protocols.
 
 ### Add the POP and IMAP permissions to your AAD application
 
@@ -206,28 +205,34 @@ https://login.microsoftonline.com/{tenant}/v2.0/adminconsent?client_id=CLIENT_ID
 
 ### Registering service principals in Exchange
 
-Once your AAD application is consented by a tenant admin, the tenant admin must register your AAD application's service principal in Exchange via Exchange Online PowerShell. This is enabled by the `New-ServicePrincipal` cmdlet. (TODO: Link to New-ServicePrincipal cmdlet reference when released)
+Once your AAD application is consented by a tenant admin, the tenant admin must register your AAD application's service principal in Exchange via Exchange Online PowerShell. This is enabled by the [`New-ServicePrincipal` cmdlet](https://docs.microsoft.com/en-us/powershell/module/exchange/new-serviceprincipal?view=exchange-ps).
 
 Here is an example of registering an AAD application's service principal in Exchange:
 
-```
-New-ServicePrincipal –Identity <Service principal object ID in AAD> -AppId <Application ID in AAD> [-Organization <Org ID>]
+```text
+New-ServicePrincipal -AppId <APPLICATION_ID> -ServiceId <OBJECT_ID> [-Organization <ORGANIZATION_ID>]
 ```
 
 Your tenant admin can now add the specific mailboxes in the tenant that will be allowed to be access by your application. This is done with the [`Add-MailboxPermission` cmdlet](https://docs.microsoft.com/en-us/powershell/module/exchange/add-mailboxpermission?view=exchange-ps).
 
-Here is an example of giving your application access to one mailbox:
+You can get your service principal's identifier using the [`Get-ServicePrincipal` cmdlet](https://docs.microsoft.com/en-us/powershell/module/exchange/get-serviceprincipal?view=exchange-ps).
+
+```text
+Get-ServicePrincipal -Organization <ORGANIZATION_ID>
+```
+
+Here is an example of giving your application's service principal access to one mailbox:
 
 ```text
 Add-MailboxPermission -Identity "john.smith@contoso.com" -User 
-"<SERVICE_PRINCIPAL_ID>" -AccessRights FullAccess
+<SERVICE_PRINCIPAL_ID> -AccessRights FullAccess
 ```
 
-Your AAD application can now access the allowed mailboxes via the POP or IMAP protocols using OAuth client credentials tokens. [Instructions on on how to generate OAuth client credentials tokens can be found here](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-client-creds-grant-flow).
+Your AAD application can now access the allowed mailboxes via the POP or IMAP protocols using the OAuth 2.0 client credentials grant flow. You can find instructions on [how to use the OAuth 2.0 client credentials grant flow here](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-client-creds-grant-flow).
 
 You must use `https://outlook.office365.com/.default` in the `scope` property in the body payload for the access token request.
 
-The access tokens generated can be used to authenticate POP and IMAP connections via SASL XOAUTH2 as described earlier in this page.
+The access tokens generated can be used as tokens to authenticate POP and IMAP connections via SASL XOAUTH2 format as described earlier in this page.
 
 ## See also
 
