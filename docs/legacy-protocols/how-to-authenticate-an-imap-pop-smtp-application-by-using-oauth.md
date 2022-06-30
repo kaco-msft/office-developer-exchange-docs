@@ -213,15 +213,17 @@ Here is an example of registering an AAD application's service principal in Exch
 New-ServicePrincipal -AppId <APPLICATION_ID> -ServiceId <OBJECT_ID> [-Organization <ORGANIZATION_ID>]
 ```
 
-The tenant admin can find the service principal identifiers in your AAD application's enterprise application instance in the tenant's Azure Portal. You can find the list of the enterprise application instances on the tenant in the **Enterprise applications** blade in the Azure Active Directory view in Azure Portal.
+The tenant admin can find the service principal identifiers referenced above in your AAD application's enterprise application instance on the tenant. You can find the list of the enterprise application instances on the tenant in the **Enterprise applications** blade in the Azure Active Directory view in Azure Portal.
 
-Your tenant admin can now add the specific mailboxes in the tenant that will be allowed to be access by your application. This is done with the [`Add-MailboxPermission` cmdlet](https://docs.microsoft.com/en-us/powershell/module/exchange/add-mailboxpermission?view=exchange-ps).
-
-You can get your service principal's identifier using the [`Get-ServicePrincipal` cmdlet](https://docs.microsoft.com/en-us/powershell/module/exchange/get-serviceprincipal?view=exchange-ps).
+You can get your registered service principal's identifier using the [`Get-ServicePrincipal` cmdlet](https://docs.microsoft.com/en-us/powershell/module/exchange/get-serviceprincipal?view=exchange-ps).
 
 ```text
 Get-ServicePrincipal -Organization <ORGANIZATION_ID>
 ```
+
+This identifier is different than the enterprise application instance identifier in the Azure Portal used earlier.
+
+The tenant admin can now add the specific mailboxes in the tenant that will be allowed to be access by your application. This is done with the [`Add-MailboxPermission` cmdlet](https://docs.microsoft.com/en-us/powershell/module/exchange/add-mailboxpermission?view=exchange-ps).
 
 Here is an example of giving your application's service principal access to one mailbox:
 
