@@ -197,21 +197,23 @@ For each tenant you would like to access Exchange mailboxes via POP or IMAP, you
 
 In your OAuth 2.0 tenant authorization request, the `scope` query parameter should be `https://ps.outlook.com/.default` for both the POP and IMAP application scopes.
 
-Your OAuth 2.0 authorization request URL should look something like this:
+Here is an example of the OAuth 2.0 authorization request URL:
 
-```
+```text
 https://login.microsoftonline.com/{tenant}/v2.0/adminconsent?client_id=CLIENT_ID_HERE&redirect_uri=REDIRECT_URI_HERE&scope=https://ps.outlook.com/.default
 ```
 
 ### Registering service principals in Exchange
 
-Once your AAD application is consented by a tenant admin, the tenant admin must register your AAD application's service principal in Exchange via Exchange Online PowerShell. This is enabled by the [`New-ServicePrincipal` cmdlet](https://docs.microsoft.com/en-us/powershell/module/exchange/new-serviceprincipal?view=exchange-ps).
+Once your AAD application is consented to by a tenant admin, the tenant admin must register your AAD application's service principal in Exchange via Exchange Online PowerShell. This is enabled by the [`New-ServicePrincipal` cmdlet](https://docs.microsoft.com/en-us/powershell/module/exchange/new-serviceprincipal?view=exchange-ps).
 
 Here is an example of registering an AAD application's service principal in Exchange:
 
 ```text
 New-ServicePrincipal -AppId <APPLICATION_ID> -ServiceId <OBJECT_ID> [-Organization <ORGANIZATION_ID>]
 ```
+
+The tenant admin can find the service principal identifiers in your AAD application's enterprise application instance in the tenant's Azure Portal. You can find the list of the enterprise application instances on the tenant in the **Enterprise applications** blade in the Azure Active Directory view in Azure Portal.
 
 Your tenant admin can now add the specific mailboxes in the tenant that will be allowed to be access by your application. This is done with the [`Add-MailboxPermission` cmdlet](https://docs.microsoft.com/en-us/powershell/module/exchange/add-mailboxpermission?view=exchange-ps).
 
