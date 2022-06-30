@@ -200,7 +200,7 @@ In your OAuth 2.0 tenant authorization request, the `scope` query parameter shou
 Here is an example of the OAuth 2.0 authorization request URL:
 
 ```text
-https://login.microsoftonline.com/{tenant}/v2.0/adminconsent?client_id=CLIENT_ID_HERE&redirect_uri=REDIRECT_URI_HERE&scope=https://ps.outlook.com/.default
+https://login.microsoftonline.com/{tenant}/v2.0/adminconsent?client_id=<CLIENT_ID>&redirect_uri=<REDIRECT_URI>&scope=https://ps.outlook.com/.default
 ```
 
 ### Registering service principals in Exchange
