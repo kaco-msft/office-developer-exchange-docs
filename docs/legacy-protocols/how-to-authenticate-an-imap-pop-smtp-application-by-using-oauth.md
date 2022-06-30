@@ -215,7 +215,7 @@ New-ServicePrincipal -AppId <APPLICATION_ID> -ServiceId <OBJECT_ID> [-Organizati
 
 The tenant admin can find the service principal identifiers referenced above in your AAD application's enterprise application instance on the tenant. You can find the list of the enterprise application instances on the tenant in the **Enterprise applications** blade in the Azure Active Directory view in Azure Portal.
 
-You can get your registered service principal's identifier using the [`Get-ServicePrincipal` cmdlet](https://docs.microsoft.com/en-us/powershell/module/exchange/get-serviceprincipal?view=exchange-ps).
+The tenant admin can retrieve the registered service principal's identifier using the [`Get-ServicePrincipal` cmdlet](https://docs.microsoft.com/en-us/powershell/module/exchange/get-serviceprincipal?view=exchange-ps).
 
 ```text
 Get-ServicePrincipal -Organization <ORGANIZATION_ID>
